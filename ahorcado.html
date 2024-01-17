@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Juego del Ahorcado</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h1>Juego del Ahorcado</h1>
+    <label for="nombre">Ingresa tu nombre:</label>
+    <input type="text" id="nombre">
+    <p>Intenta adivinar la palabra:</p>
+
+    <div id="palabraAdivinar"></div>
+    <p id="intentosRestantes"></p>
+    <p id="letrasErradas"></p>
+    <p id="letrasAdivinadas"></p>
+
+    <div>
+        <input type="text" id="letraInput" maxlength="1" placeholder="Ingrese una letra" onkeyup="event.key === 'Enter' ? adivinarLetra() : null">
+        <button class="btn bt-warning" onclick="adivinarLetra()">Adivinar</button>
+    </div>
+
+    <h2>Tabla de Posiciones</h2>
+    <table id="tablaPosiciones">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Intentos</th>
+                <th>Tiempo</th>
+                <th>Resultado</th>
+                <th>Palabra</th>
+            </tr>
+        </thead>
+        <tbody id="tablaCuerpoPosiciones">
+            <!-- Aquí se llenará dinámicamente la tabla -->
+        </tbody>
+    </table>
+
+
+    <script>
+        const palabras = ['gato', 'perro', 'casa', 'juego', 'pelota', 'sol', 'luna', 'caca', 'lulo', 'mate', 'yerba', 'jugo', 'celular', 'tiktok', 'foto', 'pie', 'roblox', 'minecraft' /* ... */ ];
+        let palabraSeleccionada = palabras[Math.floor(Math.random() * palabras.length)];
+        let letrasAdivinadas = [];
+        let letrasErradas = [];
+        let intentosRestantes = 10;
+        let inicioTiempo = 0;
+
+        function reproducirSonidoAcierto() {
+            const audioAcierto = new Audio('acierto.mp3');
+            audioAcierto.play();
+        }
+
+        function reproducirSonidoError() {
+            const audioError = new Audio('error.mp3');
+            audioError.play();
+        }
+
+        function mostrarPalabra() {
+            const palabraAdivinarElement = document.getElementById('palabraAdivinar');
+            palabraAdivinarElement.textContent = '';
+
+            for (let letra of palabraSeleccionada) {
+                if (letrasAdivinadas.includes(letra)) {
+                    palabraAdivinarElement.textContent += letra.toUpperCase() + ' ';
+                } else {
+                    palabraAdivinarElement.textContent += '_ ';
+                }
+            }
+        }
+
+        function mostrarIntentos() {
+            const intentosElement = document.getElementById('intentosRestantes');
+            intentosElement.textContent = `Intentos restantes: ${intentosRestantes}`;
+        }
+
+        function mostrarLetrasAdivinadas() {
+            const letrasAdivinadasElement = document.getElementById('letrasAdivinadas');
+            letrasAdivinadasElement.textContent = `Letras adivinadas: ${letrasAdivinadas.map(letra => letra.toUpperCase()).join(', ')}`;
+        }
+
+        function mostrarLetrasErradas() {
+            const letrasErradasElement = document.getElementById('letrasErradas');
+            letrasErradasElement.textContent = `Letras erradas: ${letrasErradas.map(letra => letra.toUpperCase()).join(', ')}`;
+        }
+
+        function adivinarLetra() {
+            const letraInput = document.getElementById('letraInput');
+            const letra = letraInput.value.toLowerCase();
+
+            if (letra && !letrasAdivinadas.includes(letra) && !letrasErradas.includes(letra)) {
+                if (!palabraSeleccionada.includes(letra)) {
+                    letrasErradas.push(letra);
+                    intentosRestantes--;
+                    reproducirSonidoError();
+                } else {
+                    letrasAdivinadas.push(letra);
+                    reproducirSonidoAcierto();
+                }
+                mostrarPalabra();
+                mostrarIntentos();
+                mostrarLetrasAdivinadas();
+                mostrarLetrasErradas();
+            }
+
+            if (intentosRestantes === 0) {
+                finalizarJuego(false);
+            }
+
+            if (!document.getElementById('palabraAdivinar').textContent.includes('_')) {
+                finalizarJuego(true);
+            }
+
+            letraInput.value = '';
+        }
+
+        function reiniciarJuego() {
+            palabraSeleccionada = palabras[Math.floor(Math.random() * palabras.length)];
+            letrasAdivinadas = [];
+            letrasErradas = [];
+            intentosRestantes = 10;
+            inicioTiempo = Date.now();
+            mostrarPalabra();
+            mostrarIntentos();
+            mostrarLetrasAdivinadas();
+            mostrarLetrasErradas();
+        }
+
+        function mostrarMensaje(mensaje) {
+            alert(mensaje);
+        }
+
+        function finalizarJuego(gano) {
+            const nombre = document.getElementById('nombre').value || 'Anónimo';
+            const tiempoTotal = Math.floor((Date.now() - inicioTiempo) / 1000);
+            const newRow = document.getElementById('tablaCuerpoPosiciones').insertRow(-1);
+            const cellNombre = newRow.insertCell(0);
+            const cellIntentos = newRow.insertCell(1);
+            const cellTiempo = newRow.insertCell(2);
+            const cellResultado = newRow.insertCell(3);
+            const cellPalabra = newRow.insertCell(4);
+
+            cellNombre.textContent = nombre;
+            cellIntentos.textContent = 10 - intentosRestantes;
+            cellTiempo.textContent = `${tiempoTotal} segundos`;
+            cellResultado.textContent = gano ? 'Ganó' : 'Perdió';
+            cellPalabra.textContent = palabraSeleccionada;
+
+            reiniciarJuego();
+            if (gano) {
+                mostrarMensaje('Eres lo más');
+            } else {
+                mostrarMensaje('Lo siento, estudia más');
+            }
+        }
+
+        reiniciarJuego();
+    </script>
+</body>
+
+</html>

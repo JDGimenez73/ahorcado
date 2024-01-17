@@ -1,0 +1,60 @@
+/* Estilos */
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+    background-color: #f4f4f4;
+    /*  background-image: url(bobypatricio.png); */
+}
+
+h1 {
+    color: #2e8b57;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+input[type="text"],
+button {
+    padding: 8px;
+    margin: 5px;
+    font-size: 16px;
+}
+
+table {
+    width: 70%;
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+table,
+th,
+td {
+    border: 1px solid #2e8b57;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: #2e8b57;
+    color: white;
+}
+
+#palabraAdivinar {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+#intentosRestantes,
+#letrasAdivinadas,
+#letrasErradas {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+#letrasErradas {
+    color: red;
+}
+
+#letraInput {
+    margin-right: 10px;
+}

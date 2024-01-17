@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Juego de Cálculos Matemáticos</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Estilos adicionales aquí si es necesario */
+        
+        table {
+            width: 50%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        
+        table,
+        th,
+        td {
+            border: 1px solid #2e8b57;
+            padding: 8px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #2e8b57;
+            color: white;
+        }
+        
+        #operacion {
+            font-size: 18px;
+        }
+        
+        #respuestaInput {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Juego de Cálculos Matemáticos</h1>
+    <p>Adivina el número oculto en la operación presentada:</p>
+
+    <div id="operaciones">
+        <p id="operacion"></p>
+        <input type="number" id="respuestaInput" placeholder="Ingrese su respuesta">
+        <button onclick="adivinarNumeroOculto()">Adivinar</button>
+    </div>
+
+    <h2>Tabla de Resultados</h2>
+    <table id="tablaResultados">
+        <thead>
+            <tr>
+                <th>Operación</th>
+                <th>Respuesta</th>
+            </tr>
+        </thead>
+        <tbody id="tablaCuerpoResultados">
+            <!-- Aquí se llenará dinámicamente la tabla -->
+        </tbody>
+    </table>
+
+    <script>
+        let numeroOculto = 0;
+        const tablaCuerpoResultados = document.getElementById('tablaCuerpoResultados');
+        const operacionElement = document.getElementById('operacion');
+        const respuestaInput = document.getElementById('respuestaInput');
+
+        function generarOperacion() {
+            const numero1 = Math.floor(Math.random() * 100) + 1;
+            const numero2 = Math.floor(Math.random() * 100) + 1;
+            const operaciones = ['suma', 'resta'];
+            const operacion = operaciones[Math.floor(Math.random() * operaciones.length)];
+
+            if (operacion === 'suma') {
+                numeroOculto = numero1;
+                operacionElement.textContent = `Número oculto + ${numero2} = ${numero1 + numero2}`;
+            } else {
+                numeroOculto = numero1 + numero2;
+                operacionElement.textContent = `Número oculto - ${numero2} = ${numeroOculto}`;
+            }
+        }
+
+        function adivinarNumeroOculto() {
+            const respuesta = parseInt(respuestaInput.value);
+            const newRow = tablaCuerpoResultados.insertRow(-1);
+            const cellOperacion = newRow.insertCell(0);
+            const cellRespuesta = newRow.insertCell(1);
+
+            cellOperacion.textContent = operacionElement.textContent;
+            cellRespuesta.textContent = respuesta === numeroOculto ? 'Correcto' : 'Incorrecto';
+
+            generarOperacion();
+            respuestaInput.value = ''; // Limpiar el campo de respuesta después de cada intento
+        }
+
+        generarOperacion(); // Generar la primera operación al cargar la página
+    </script>
+</body>
+
+</html>
+
+Windows PowerShell finalizó con el siguiente error: No se puede cargar el archivo o ensamblado 'System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089' ni una de sus dependencias. El sistema no puede encontrar el archivo especificado.

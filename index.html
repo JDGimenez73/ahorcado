@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Juego de Adivinanzas</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Estilos adicionales aquí si es necesario */
+        
+        table {
+            width: 50%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        
+        table,
+        th,
+        td {
+            border: 1px solid #2e8b57;
+            padding: 8px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #2e8b57;
+            color: white;
+        }
+        
+        #resultado {
+            font-weight: bold;
+        }
+        
+        #movimientos {
+            width: 40%;
+            margin: 20px auto;
+            border: 1px solid #2e8b57;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        #temporizador {
+            font-size: 20px;
+            font-family: 'fantasy';
+            color: #2e8b57;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Juego de Adivinanzas</h1>
+    <label for="nombre">Ingresa tu nombre:</label>
+    <input type="text" id="nombre">
+    <br><br>
+    <p>Intenta adivinar el número secreto entre 1 y 100:</p>
+    <input type="number" id="numeroInput">
+    <button onclick="adivinarNumero()">Adivinar</button>
+    <p id="resultado"></p>
+
+    <div id="movimientos">
+        <h2>Movimientos</h2>
+        <ul id="listaMovimientos"></ul>
+        <p>Intentos: <span id="contadorIntentos">0</span></p>
+    </div>
+
+    <h2>Tabla de Posiciones</h2>
+    <table id="tablaPosiciones">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Intentos</th>
+            </tr>
+        </thead>
+        <tbody id="tablaCuerpo">
+            <!-- Aquí se llenará dinámicamente la tabla -->
+        </tbody>
+    </table>
+
+    <div id="temporizador">
+        Tiempo restante: <span id="tiempoRestante">60</span> segundos
+    </div>
+
+    <button onclick="iniciarTemporizador()">Iniciar Temporizador</button>
+
+    <script>
+        let numeroAleatorio = Math.floor(Math.random() * 100) + 1;
+        let intentos = 0;
+        let nombre = '';
+        let tiempoRestante = 60;
+        let temporizadorIniciado = false;
+        const tablaCuerpo = document.getElementById('tablaCuerpo');
+        const resultadoElement = document.getElementById('resultado');
+        const listaMovimientos = document.getElementById('listaMovimientos');
+        const contadorIntentos = document.getElementById('contadorIntentos');
+        const tiempoRestanteElement = document.getElementById('tiempoRestante');
+
+        function iniciarTemporizador() {
+            if (!temporizadorIniciado) {
+                const temporizador = setInterval(function() {
+                    tiempoRestante--;
+                    tiempoRestanteElement.textContent = tiempoRestante;
+                    if (tiempoRestante <= 0) {
+                        clearInterval(temporizador);
+                        resultadoElement.textContent = '¡Tiempo agotado! Inténtalo de nuevo.';
+                        reiniciarJuego();
+                    }
+                }, 1000);
+                temporizadorIniciado = true;
+            }
+        }
+
+        function adivinarNumero() {
+            if (intentos === 0) {
+                nombre = document.getElementById('nombre').value;
+            }
+
+            const numeroUsuario = parseInt(document.getElementById('numeroInput').value);
+            intentos++;
+
+            const movimiento = document.createElement('li');
+            movimiento.textContent = `Intento ${intentos}: ${numeroUsuario}`;
+            listaMovimientos.appendChild(movimiento);
+            contadorIntentos.textContent = intentos;
+
+            if (numeroUsuario === numeroAleatorio) {
+                resultadoElement.textContent = `¡Felicitaciones, ${nombre}! ¡Adivinaste el número en ${intentos} intentos!`;
+                actualizarTabla();
+                reiniciarJuego();
+            } else if (numeroUsuario > numeroAleatorio) {
+                resultadoElement.textContent = 'Intenta con un número más bajo.';
+            } else {
+                resultadoElement.textContent = 'Intenta con un número más alto.';
+            }
+        }
+
+        function actualizarTabla() {
+            const newRow = tablaCuerpo.insertRow(-1);
+            const cellNombre = newRow.insertCell(0);
+            const cellIntentos = newRow.insertCell(1);
+
+            cellNombre.textContent = nombre;
+            cellIntentos.textContent = intentos;
+        }
+
+        function reiniciarJuego() {
+            intentos = 0;
+            numeroAleatorio = Math.floor(Math.random() * 100) + 1;
+            listaMovimientos.innerHTML = '';
+            contadorIntentos.textContent = '0';
+            tiempoRestante = 180;
+            tiempoRestanteElement.textContent = tiempoRestante;
+            temporizadorIniciado = false;
+        }
+    </script>
+</body>
+
+</html>
